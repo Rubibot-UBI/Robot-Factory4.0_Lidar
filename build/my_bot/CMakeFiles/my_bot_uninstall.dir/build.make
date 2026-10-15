@@ -53,7 +53,7 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/rafabacano/dev_ws/src/my_bot
+CMAKE_SOURCE_DIR = /home/rafabacano/dev_ws/src
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /home/rafabacano/dev_ws/build/my_bot
@@ -82,6 +82,6 @@ CMakeFiles/my_bot_uninstall.dir/clean:
 .PHONY : CMakeFiles/my_bot_uninstall.dir/clean
 
 CMakeFiles/my_bot_uninstall.dir/depend:
-	cd /home/rafabacano/dev_ws/build/my_bot && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/rafabacano/dev_ws/src/my_bot /home/rafabacano/dev_ws/src/my_bot /home/rafabacano/dev_ws/build/my_bot /home/rafabacano/dev_ws/build/my_bot /home/rafabacano/dev_ws/build/my_bot/CMakeFiles/my_bot_uninstall.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/rafabacano/dev_ws/build/my_bot && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/rafabacano/dev_ws/src /home/rafabacano/dev_ws/src /home/rafabacano/dev_ws/build/my_bot /home/rafabacano/dev_ws/build/my_bot /home/rafabacano/dev_ws/build/my_bot/CMakeFiles/my_bot_uninstall.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/my_bot_uninstall.dir/depend
 

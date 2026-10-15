@@ -60,7 +60,7 @@
 	"paths" : 
 	{
 		"build" : "/home/rafabacano/dev_ws/build/my_bot",
-		"source" : "/home/rafabacano/dev_ws/src/my_bot"
+		"source" : "/home/rafabacano/dev_ws/src"
 	},
 	"version" : 
 	{

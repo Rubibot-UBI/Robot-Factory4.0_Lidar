@@ -1,4 +1,4 @@
-# Install script for directory: /home/rafabacano/dev_ws/src/my_bot
+# Install script for directory: /home/rafabacano/dev_ws/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

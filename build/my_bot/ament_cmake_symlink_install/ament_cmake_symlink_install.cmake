@@ -316,46 +316,46 @@ message(STATUS "Execute custom install script")
 # begin of custom install code
 
 # install(DIRECTORY "config" "description" "launch" "worlds" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_directory("/home/rafabacano/dev_ws/src/my_bot" DIRECTORY "config" "description" "launch" "worlds" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_directory("/home/rafabacano/dev_ws/src" DIRECTORY "config" "description" "launch" "worlds" "DESTINATION" "share/my_bot")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/my_bot" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/my_bot" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/my_bot" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/my_bot" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/my_bot" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/my_bot" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
 
 # install(FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/my_bot/environment")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/my_bot/environment")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/my_bot/environment")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/my_bot/environment")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/my_bot/environment")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/my_bot/environment")
 
 # install(FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/my_bot/environment")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/my_bot/environment")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/my_bot/environment")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/my_bot/environment")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/my_bot/environment")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/my_bot/environment")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/my_bot")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/my_bot")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/my_bot")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/my_bot")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/my_bot")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/packages/my_bot" "DESTINATION" "share/ament_index/resource_index/packages")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/packages/my_bot" "DESTINATION" "share/ament_index/resource_index/packages")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_index/share/ament_index/resource_index/packages/my_bot" "DESTINATION" "share/ament_index/resource_index/packages")
 
 # install(FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_core/my_botConfig.cmake" "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_core/my_botConfig-version.cmake" "DESTINATION" "share/my_bot/cmake")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_core/my_botConfig.cmake" "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_core/my_botConfig-version.cmake" "DESTINATION" "share/my_bot/cmake")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_core/my_botConfig.cmake" "/home/rafabacano/dev_ws/build/my_bot/ament_cmake_core/my_botConfig-version.cmake" "DESTINATION" "share/my_bot/cmake")
 
-# install(FILES "/home/rafabacano/dev_ws/src/my_bot/package.xml" "DESTINATION" "share/my_bot")
-ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src/my_bot" FILES "/home/rafabacano/dev_ws/src/my_bot/package.xml" "DESTINATION" "share/my_bot")
+# install(FILES "/home/rafabacano/dev_ws/src/package.xml" "DESTINATION" "share/my_bot")
+ament_cmake_symlink_install_files("/home/rafabacano/dev_ws/src" FILES "/home/rafabacano/dev_ws/src/package.xml" "DESTINATION" "share/my_bot")

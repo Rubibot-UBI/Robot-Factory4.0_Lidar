@@ -1,1 +1,1 @@
-/home/rafabacano/dev_ws/src/my_bot/launch/rsp.launch.py
+/home/rafabacano/dev_ws/src/launch/rsp.launch.py
