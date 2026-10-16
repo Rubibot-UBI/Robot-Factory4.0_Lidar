@@ -1,0 +1,11 @@
+[project]
+name = "my-bot"
+version = "0.0.0"
+description = ""
+requires-python = ">=3.12"
+dependencies = [
+    "onshape-to-robot>=1.8.3",
+]
+
+[tool.uv]
+package = false
