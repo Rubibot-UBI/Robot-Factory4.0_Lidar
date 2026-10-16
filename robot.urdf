@@ -1,0 +1,397 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape document_id: 71a841246b4017887df5409b -->
+<robot name="my_bot">
+  <!-- Link base -->
+  <link name="base">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part n20_mini_micro_metall_gear_motor -->
+    <visual>
+      <origin xyz="0.0294437 -0.00645663 0.000975149" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/n20_mini_micro_metall_gear_motor.stl"/>
+      </geometry>
+      <material name="n20_mini_micro_metall_gear_motor_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0294437 -0.00645663 0.000975149" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/n20_mini_micro_metall_gear_motor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part n20_mini_micro_metall_gear_motor_2 -->
+    <visual>
+      <origin xyz="-0.0312922 -0.00905151 0.00200721" rpy="-0.000156777 -0.0169755 -3.09889"/>
+      <geometry>
+        <mesh filename="package://assets/n20_mini_micro_metall_gear_motor.stl"/>
+      </geometry>
+      <material name="n20_mini_micro_metall_gear_motor_2_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0312922 -0.00905151 0.00200721" rpy="-0.000156777 -0.0169755 -3.09889"/>
+      <geometry>
+        <mesh filename="package://assets/n20_mini_micro_metall_gear_motor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rp_lidar -->
+    <visual>
+      <origin xyz="0.123908 -0.080762 -0.657373" rpy="1.55382 0.000156754 -1.5281"/>
+      <geometry>
+        <mesh filename="package://assets/rp_lidar.stl"/>
+      </geometry>
+      <material name="rp_lidar_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.123908 -0.080762 -0.657373" rpy="1.55382 0.000156754 -1.5281"/>
+      <geometry>
+        <mesh filename="package://assets/rp_lidar.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part base -->
+    <visual>
+      <origin xyz="-0.00104301 -0.00775804 -0.00550781" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/base.stl"/>
+      </geometry>
+      <material name="base_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00104301 -0.00775804 -0.00550781" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/base.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part resto -->
+    <visual>
+      <origin xyz="-0.000703692 -0.00774668 0.0144893" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/resto.stl"/>
+      </geometry>
+      <material name="resto_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.000703692 -0.00774668 0.0144893" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/resto.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part eletroiman -->
+    <visual>
+      <origin xyz="0.000994645 -0.0538637 -0.00151562" rpy="1.57095 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/eletroiman.stl"/>
+      </geometry>
+      <material name="eletroiman_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000994645 -0.0538637 -0.00151562" rpy="1.57095 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/eletroiman.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1 -->
+    <visual>
+      <origin xyz="-0.00388971 -0.0419226 -0.0152415" rpy="-0.787495 -0.537073 0.185703"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00388971 -0.0419226 -0.0152415" rpy="-0.787495 -0.537073 0.185703"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_2 -->
+    <visual>
+      <origin xyz="0.00472783 -0.0498351 -0.0153832" rpy="0.6418 0.392761 0.314539"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00472783 -0.0498351 -0.0153832" rpy="0.6418 0.392761 0.314539"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_3 -->
+    <visual>
+      <origin xyz="-0.00353659 -0.0501882 -0.0152428" rpy="0.271776 -0.691843 -0.270152"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_3_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00353659 -0.0501882 -0.0152428" rpy="0.271776 -0.691843 -0.270152"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part casterballwheelbody__cut_extrude6 -->
+    <visual>
+      <origin xyz="0.00028842 -0.0458832 -0.0230113" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheelbody__cut_extrude6.stl"/>
+      </geometry>
+      <material name="casterballwheelbody__cut_extrude6_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00028842 -0.0458832 -0.0230113" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheelbody__cut_extrude6.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 12mmball__revolve1 -->
+    <visual>
+      <origin xyz="0.000330117 -0.0458654 -0.0205116" rpy="-0.00424253 0.0164375 -0.219138"/>
+      <geometry>
+        <mesh filename="package://assets/12mmball__revolve1.stl"/>
+      </geometry>
+      <material name="12mmball__revolve1_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000330117 -0.0458654 -0.0205116" rpy="-0.00424253 0.0164375 -0.219138"/>
+      <geometry>
+        <mesh filename="package://assets/12mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_4 -->
+    <visual>
+      <origin xyz="0.00437471 -0.0415695 -0.015382" rpy="1.55624 0.741664 0.527832"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_4_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00437471 -0.0415695 -0.015382" rpy="1.55624 0.741664 0.527832"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part casterballwheellid__cut_extrude2 -->
+    <visual>
+      <origin xyz="0.000469237 -0.0458607 -0.0123128" rpy="-0.0164377 -0.00424196 -1.78986"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheellid__cut_extrude2.stl"/>
+      </geometry>
+      <material name="casterballwheellid__cut_extrude2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000469237 -0.0458607 -0.0123128" rpy="-0.0164377 -0.00424196 -1.78986"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheellid__cut_extrude2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_5 -->
+    <visual>
+      <origin xyz="-0.00705859 0.0322934 -0.0151299" rpy="-0.787495 -0.537073 0.185703"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_5_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00705859 0.0322934 -0.0151299" rpy="-0.787495 -0.537073 0.185703"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_6 -->
+    <visual>
+      <origin xyz="0.00155894 0.0243808 -0.0152716" rpy="0.6418 0.392761 0.314539"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_6_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00155894 0.0243808 -0.0152716" rpy="0.6418 0.392761 0.314539"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_7 -->
+    <visual>
+      <origin xyz="-0.00670548 0.0240277 -0.0151312" rpy="0.271776 -0.691843 -0.270152"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_7_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00670548 0.0240277 -0.0151312" rpy="0.271776 -0.691843 -0.270152"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part casterballwheelbody__cut_extrude6_2 -->
+    <visual>
+      <origin xyz="-0.00288046 0.0283327 -0.0228996" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheelbody__cut_extrude6.stl"/>
+      </geometry>
+      <material name="casterballwheelbody__cut_extrude6_2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00288046 0.0283327 -0.0228996" rpy="0.000156777 0.0169755 0.042698"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheelbody__cut_extrude6.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 12mmball__revolve1_2 -->
+    <visual>
+      <origin xyz="-0.00283877 0.0283506 -0.0204" rpy="-0.00424253 0.0164375 -0.219138"/>
+      <geometry>
+        <mesh filename="package://assets/12mmball__revolve1.stl"/>
+      </geometry>
+      <material name="12mmball__revolve1_2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00283877 0.0283506 -0.0204" rpy="-0.00424253 0.0164375 -0.219138"/>
+      <geometry>
+        <mesh filename="package://assets/12mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 4mmball__revolve1_8 -->
+    <visual>
+      <origin xyz="0.00120582 0.0326464 -0.0152703" rpy="1.55624 0.741664 0.527832"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+      <material name="4mmball__revolve1_8_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00120582 0.0326464 -0.0152703" rpy="1.55624 0.741664 0.527832"/>
+      <geometry>
+        <mesh filename="package://assets/4mmball__revolve1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part casterballwheellid__cut_extrude2_2 -->
+    <visual>
+      <origin xyz="-0.00269965 0.0283552 -0.0122012" rpy="-0.0164377 -0.00424196 -1.78986"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheellid__cut_extrude2.stl"/>
+      </geometry>
+      <material name="casterballwheellid__cut_extrude2_2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00269965 0.0283552 -0.0122012" rpy="-0.0164377 -0.00424196 -1.78986"/>
+      <geometry>
+        <mesh filename="package://assets/casterballwheellid__cut_extrude2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link roda -->
+  <link name="roda">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part roda -->
+    <visual>
+      <origin xyz="0 0 0" rpy="-3.14159 0 -0"/>
+      <geometry>
+        <mesh filename="package://assets/roda.stl"/>
+      </geometry>
+      <material name="roda_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="-3.14159 0 -0"/>
+      <geometry>
+        <mesh filename="package://assets/roda.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from base to roda -->
+  <joint name="Revolute 1" type="revolute">
+    <origin xyz="-0.0422773 -0.00959774 0.00219389" rpy="-3.12025 -1.55382 0.0213475"/>
+    <parent link="base"/>
+    <child link="roda"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Link roda_2 -->
+  <link name="roda_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part roda_2 -->
+    <visual>
+      <origin xyz="0 -0 -0" rpy="-3.14159 -0 0"/>
+      <geometry>
+        <mesh filename="package://assets/roda.stl"/>
+      </geometry>
+      <material name="roda_2_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -0 -0" rpy="-3.14159 -0 0"/>
+      <geometry>
+        <mesh filename="package://assets/roda.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from base to roda_2 -->
+  <joint name="Revolute 2" type="revolute">
+    <origin xyz="0.0404288 -0.00591039 0.000788417" rpy="0.0213475 -1.55382 0.0213475"/>
+    <parent link="base"/>
+    <child link="roda_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+</robot>

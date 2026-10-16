@@ -1,0 +1,8 @@
+{
+  "documentId": "71a841246b4017887df5409b",
+  "assemblyName": "Assembly Simples",
+  "robotName": "my_bot",
+  "outputFormat": "urdf",
+  "mergeSTLs": "visual",
+  "simplifySTLs": "visual"
+}
