@@ -10,9 +10,9 @@
     <material name="light_blue"><color rgba="0.62 0.81 0.93 1"/></material>
 
     <!-- ================= PARAMETROS ================= -->
-    <!-- TODO: medir no CAD (diametro da roda / 2) -->
-    <xacro:property name="wheel_radius" value="0.0215"/>
-    <xacro:property name="wheel_width" value="0.010"/>
+    <!-- medidos no roda.stl: diametro 56 mm, largura 8 mm -->
+    <xacro:property name="wheel_radius" value="0.028"/>
+    <xacro:property name="wheel_width" value="0.008"/>
     <xacro:property name="wheel_mass" value="0.03"/>
     <xacro:property name="chassis_mass" value="0.5"/>
     <xacro:property name="caster_ball_radius" value="0.006"/>   <!-- bola de 12 mm -->
@@ -21,8 +21,8 @@
     <!-- No CAD a frente do robo e -Y. Rodar +90 graus em Z poe a frente em +X (convencao ROS). -->
     <xacro:property name="chassis_yaw" value="${pi/2}"/>
 
-    <!-- TODO: posicao do LIDAR no chassis (no export veio z=-0.657, mate errado) -->
-    <xacro:property name="lidar_xyz" value="0 0 0.05"/>
+    <!-- centro da mesh do LIDAR no frame do chassis, calculado a partir do export (assenta no topo do 'resto') -->
+    <xacro:property name="lidar_xyz" value="0.0001 -0.0084 0.0913"/>
 
     <!-- ================= MACROS ================= -->
     <xacro:macro name="chassis_visual" params="mesh xyz rpy material:=light_blue">
@@ -41,7 +41,8 @@
                 <material name="black"/>
             </visual>
             <collision>
-                <!-- cilindro simples (eixo Z = eixo de rotacao) -->
+                <!-- cilindro simples (eixo Z = eixo de rotacao); a mesh vai de z=0 a z=-0.008 no frame da roda -->
+                <origin xyz="0 0 ${-wheel_width/2}" rpy="0 0 0"/>
                 <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
             </collision>
             <inertial>
@@ -91,6 +92,7 @@
         <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="0.0294437 -0.00645663 0.000975149" rpy="0.000156777 0.0169755 0.042698" material="grey"/>
         <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="-0.0312922 -0.00905151 0.00200721" rpy="-0.000156777 -0.0169755 -3.09889" material="grey"/>
         <xacro:chassis_visual mesh="eletroiman.stl" xyz="0.000994645 -0.0538637 -0.00151562" rpy="1.57095 0.0169755 0.042698" material="orange"/>
+        <xacro:chassis_visual mesh="rp_lidar.stl" xyz="0.123908 -0.080762 -0.657373" rpy="1.55382 0.000156754 -1.5281" material="grey"/>
         <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="0.00028842 -0.0458832 -0.0230113" rpy="0.000156777 0.0169755 0.042698" material="white"/>
         <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl" xyz="0.000469237 -0.0458607 -0.0123128" rpy="-0.0164377 -0.00424196 -1.78986" material="white"/>
         <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="-0.00288046 0.0283327 -0.0228996" rpy="0.000156777 0.0169755 0.042698" material="white"/>
@@ -129,13 +131,8 @@
     <xacro:caster_ball name="caster_b" xyz="-0.00283877 0.0283506 -0.0204" rpy="-0.00424253 0.0164375 -0.219138"/>
 
     <!-- ================= LIDAR ================= -->
-    <link name="laser_frame">
-        <visual>
-            <origin xyz="0 0 0" rpy="1.55382 0.000156754 -1.5281"/>
-            <geometry><mesh filename="${meshes}/rp_lidar.stl"/></geometry>
-            <material name="grey"/>
-        </visual>
-    </link>
+    <!-- visual do LIDAR no chassis (pose do export; a mesh tem a origem longe do corpo) -->
+    <link name="laser_frame"/>
     <joint name="laser_joint" type="fixed">
         <parent link="chassis"/>
         <child link="laser_frame"/>

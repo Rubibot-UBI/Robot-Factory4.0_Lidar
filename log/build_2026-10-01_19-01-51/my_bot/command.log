@@ -1,6 +1,0 @@
-Invoking command in '/home/rafabacano/dev_ws/build/my_bot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake /home/rafabacano/dev_ws/src -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/rafabacano/dev_ws/install/my_bot
-Invoked command in '/home/rafabacano/dev_ws/build/my_bot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake /home/rafabacano/dev_ws/src -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/rafabacano/dev_ws/install/my_bot
-Invoking command in '/home/rafabacano/dev_ws/build/my_bot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --build /home/rafabacano/dev_ws/build/my_bot -- -j16 -l16
-Invoked command in '/home/rafabacano/dev_ws/build/my_bot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --build /home/rafabacano/dev_ws/build/my_bot -- -j16 -l16
-Invoking command in '/home/rafabacano/dev_ws/build/my_bot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --install /home/rafabacano/dev_ws/build/my_bot
-Invoked command in '/home/rafabacano/dev_ws/build/my_bot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --install /home/rafabacano/dev_ws/build/my_bot

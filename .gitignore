@@ -1,4 +1,16 @@
+# Editor / ambiente Python
 .vscode/
 .venv/
+__pycache__/
+*.pyc
+
+# Segredos (chaves do Onshape)
 .env
+
+# Export bruto do Onshape (os .stl que usas ficam em src/description/meshes/)
 assets/
+
+# Build do ROS 2 / colcon
+build/
+install/
+log/

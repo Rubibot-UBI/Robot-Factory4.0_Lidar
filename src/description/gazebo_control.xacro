@@ -20,8 +20,8 @@
         <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
             <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint>
-            <!-- distancia entre rodas medida no CAD: |0.0404 - (-0.0423)| -->
-            <wheel_separation>0.0827</wheel_separation>
+            <!-- distancia entre os centros das rodas, medida no CAD -->
+            <wheel_separation>0.0907</wheel_separation>
             <wheel_radius>${wheel_radius}</wheel_radius>
             <frame_id>odom</frame_id>
             <child_frame_id>base_link</child_frame_id>
