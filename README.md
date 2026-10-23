@@ -69,18 +69,47 @@ source ~/dev_ws/install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
-Verificar: `ros2 topic echo /odom` (o `x` cresce a andar em frente).
+Verificar: `ros2 topic echo /odom` (o `x` cresce a andar em frente) e `ros2 topic echo /scan --once`.
 
 ## Estrutura
 
 | Pasta / ficheiro | Para quê |
 |---|---|
 | `src/description/robot_core.xacro` | links, joints, massas, materiais |
-| `src/description/gazebo_control.xacro` | plugin diff_drive e atrito (Gazebo) |
+| `src/description/gazebo_control.xacro` | plugin diff_drive, joint_states, atrito e sensor LIDAR (Gazebo) |
+| `tools/mass_budget.py` | recalcula massa, centro de massa e inércia do chassis a partir das meshes |
 | `src/description/meshes/` | `.stl` exportados do Onshape |
 | `src/launch/rsp.launch.py` | robot_state_publisher (RViz) |
 | `src/launch/sim.launch.py` | Gazebo + spawn + ponte ROS↔Gazebo |
 | `src/worlds/empty.world` | mundo vazio |
+
+## Física do robô (o que está modelado e porquê)
+
+Frames: `base_link` = ponto médio do eixo das rodas, à altura do eixo (x frente, y esquerda, z cima).
+`chassis` = frame da placa base do CAD (frente do CAD = -Y, por isso `chassis_joint` roda 90° em Z).
+Todas as poses das meshes são relativas à placa base. O export do Onshape vinha rodado
+2.4° em Z e 1° em Y em relação ao frame do assembly, o que deixava os eixos das rodas tortos.
+
+| Medido no CAD | Valor |
+|---|---|
+| Rodas | Ø 56 mm × 8 mm, centros a y = ±45.4 mm → `wheel_separation` = 0.0908 m |
+| Esferas (casters) | Ø 12 mm, fundo à mesma cota que o fundo das rodas (3 apoios coplanares) |
+| Dimensão do robô | placa 80 × 96 mm; ~110 mm de comprimento com o íman; 144 mm de altura (cabe nos 30×30×30 cm) |
+| Eixo do LIDAR | 12.4 mm **atrás** do centro do robô (`lidar_x` em robot_core.xacro) |
+
+Estimativas que **tens de confirmar com o robô real** (propriedades no topo de `robot_core.xacro`):
+massas (`chassis_mass` 0.485 kg, rodas 12 g, esferas 7 g), limites do motor (`motor_max_torque`,
+`motor_max_speed`) e a altura do plano de varrimento do LIDAR (`lidar_z`).
+Depois de pesar, edita a tabela `PARTS` em `tools/mass_budget.py`, corre-o e copia os valores impressos.
+
+### LIDAR
+RPLIDAR A1M8: 0.15–12 m, 360 pontos, 10 Hz, ruído gaussiano σ = 5 mm, tópico `/scan`, frame `laser_frame`
+(eixo X do laser = frente do robô). Parâmetros no topo de `gazebo_control.xacro`.
+O mundo precisa do plugin `gz-sim-sensors-system` (já incluído em `empty.world`).
+
+> **Atenção:** as paredes das máquinas e armazéns têm 130 mm de altura (figuras 4.2 e 4.3 das regras) e o plano do
+> LIDAR está a ~130 mm do chão, mesmo no topo delas. Confirma a altura real do plano no datasheet/robô e,
+> se necessário, baixa o LIDAR ou ajusta `lidar_z`.
 
 ## Por fazer
 primeiro eu quero deixar tudo da parte "fisica" do robo bem, depois vou querer mudar o mapa porque eu vou fazer amcl, o mapa vai ser aquele que está nas regras da competição + uns pilares nos locais indicados, e so depois vou fazer eu o algoritmo em python para reagir aos valores dados do lidar, não esquecer de configurar este lidar de acordo com este link:

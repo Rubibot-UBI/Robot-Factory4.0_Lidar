@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- =====================================================================
+         FRAMES (convencao ROS, REP-103)
+           base_link : ponto medio do eixo das rodas, a altura do eixo
+                       (x = frente, y = esquerda, z = cima)
+           chassis   : "plate frame" = frame da placa base no CAD (frente = -Y).
+                       E o frame em que estao todas as poses das meshes.
+         Todas as poses das meshes foram recalculadas relativamente a placa base:
+         o export do Onshape vinha rodado 2.4 graus em Z / 1 grau em Y, o que
+         deixava os eixos das rodas tortos e o robo a andar ligeiramente de lado.
+         ===================================================================== -->
+
     <!-- ================= MATERIAIS ================= -->
     <material name="white"><color rgba="1 1 1 1"/></material>
     <material name="orange"><color rgba="1 0.3 0.1 1"/></material>
@@ -9,20 +20,46 @@
     <material name="grey"><color rgba="0.7 0.7 0.7 1"/></material>
     <material name="light_blue"><color rgba="0.62 0.81 0.93 1"/></material>
 
-    <!-- ================= PARAMETROS ================= -->
-    <!-- medidos no roda.stl: diametro 56 mm, largura 8 mm -->
-    <xacro:property name="wheel_radius" value="0.028"/>
-    <xacro:property name="wheel_width" value="0.008"/>
-    <xacro:property name="wheel_mass" value="0.03"/>
-    <xacro:property name="chassis_mass" value="0.5"/>
-    <xacro:property name="caster_ball_radius" value="0.006"/>   <!-- bola de 12 mm -->
+    <!-- ================= PARAMETROS GEOMETRICOS (medidos no CAD) ================= -->
     <xacro:property name="meshes" value="package://my_bot/description/meshes"/>
 
-    <!-- No CAD a frente do robo e -Y. Rodar +90 graus em Z poe a frente em +X (convencao ROS). -->
-    <xacro:property name="chassis_yaw" value="${pi/2}"/>
+    <xacro:property name="wheel_radius" value="0.028"/>            <!-- roda.stl: diametro 56 mm -->
+    <xacro:property name="wheel_width" value="0.008"/>             <!-- roda.stl: 8 mm -->
+    <xacro:property name="wheel_y" value="0.0454"/>                <!-- centro de cada roda (CAD: separacao centro-a-centro 90.8 mm) -->
+    <xacro:property name="wheel_separation" value="${2*wheel_y}"/> <!-- 0.0908 m, usado pelo diff_drive -->
+    <xacro:property name="axle_height_in_plate" value="0.007"/>    <!-- eixo das rodas 7 mm acima da origem da placa -->
 
-    <!-- centro da mesh do LIDAR no frame do chassis, calculado a partir do export (assenta no topo do 'resto') -->
-    <xacro:property name="lidar_xyz" value="0.0001 -0.0084 0.0913"/>
+    <xacro:property name="caster_ball_radius" value="0.006"/>      <!-- bola de 12 mm -->
+    <!-- esferas: centro a z=-15 mm na placa => fundo a -21 mm == fundo das rodas (7-28 = -21 mm). Os 3 apoios ficam coplanares. -->
+    <xacro:property name="caster_z" value="-0.015"/>
+    <xacro:property name="caster_front_y" value="-0.03813"/>
+    <xacro:property name="caster_rear_y" value="0.03615"/>
+
+    <!-- ================= PARAMETROS FISICOS (ESTIMATIVAS - pesar o robo e ajustar!) =================
+         Correr  python3 tools/mass_budget.py  para recalcular massa/CM/inercia do chassis
+         depois de mudar a tabela de massas nesse script. -->
+    <xacro:property name="wheel_mass" value="0.012"/>              <!-- roda impressa 7.6 g (PLA macico) + pneu -->
+    <xacro:property name="caster_ball_mass" value="0.0071"/>       <!-- esfera de aco 12 mm: 0.902 cm3 x 7.85 g/cm3 -->
+
+    <xacro:property name="chassis_mass" value="0.485"/>            <!-- placa 60 g + corpo/bateria/PCBs 200 g + 2 motores + iman + LIDAR 170 g + 2 corpos de caster -->
+    <xacro:property name="chassis_com" value="-0.00006 -0.00094 0.05392"/>
+    <xacro:property name="chassis_ixx" value="1.0369e-03"/>
+    <xacro:property name="chassis_ixy" value="1.6735e-07"/>
+    <xacro:property name="chassis_ixz" value="1.1116e-06"/>
+    <xacro:property name="chassis_iyy" value="8.5370e-04"/>
+    <xacro:property name="chassis_iyz" value="-1.1292e-04"/>
+    <xacro:property name="chassis_izz" value="6.0338e-04"/>
+
+    <!-- limites do motor (N20 com redutora - ajustar ao motor real) -->
+    <xacro:property name="motor_max_torque" value="0.1"/>          <!-- N.m por roda -->
+    <xacro:property name="motor_max_speed" value="20.0"/>          <!-- rad/s por roda (~190 rpm => 0.56 m/s) -->
+
+    <!-- ================= LIDAR (RPLIDAR A1) ================= -->
+    <!-- Eixo de rotacao da cabeca medido na mesh: (0, +12.4 mm) no plate frame, i.e. 12.4 mm ATRAS do centro do robo.
+         Plano de varrimento: a meio da cabeca (z = 109 mm na placa). Ajustar se o datasheet indicar outra altura. -->
+    <xacro:property name="lidar_x" value="-0.0124"/>               <!-- em base_link -->
+    <xacro:property name="lidar_y" value="0.0"/>
+    <xacro:property name="lidar_z" value="${0.109 - axle_height_in_plate}"/>
 
     <!-- ================= MACROS ================= -->
     <xacro:macro name="chassis_visual" params="mesh xyz rpy material:=light_blue">
@@ -33,16 +70,16 @@
         </visual>
     </xacro:macro>
 
-    <xacro:macro name="wheel" params="name xyz rpy axis">
+    <!-- Roda: origem no centro do pneu, eixo de rotacao = Z do link = +Y do base_link.
+         Velocidade positiva nas duas juntas => robo anda para a frente (+X). -->
+    <xacro:macro name="wheel" params="name y vis_z vis_roll">
         <link name="${name}_wheel">
             <visual>
-                <origin xyz="0 0 0" rpy="-3.14159 0 0"/>
+                <origin xyz="0 0 ${vis_z}" rpy="${vis_roll} 0 0"/>
                 <geometry><mesh filename="${meshes}/roda.stl"/></geometry>
                 <material name="black"/>
             </visual>
             <collision>
-                <!-- cilindro simples (eixo Z = eixo de rotacao); a mesh vai de z=0 a z=-0.008 no frame da roda -->
-                <origin xyz="0 0 ${-wheel_width/2}" rpy="0 0 0"/>
                 <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
             </collision>
             <inertial>
@@ -53,17 +90,19 @@
             </inertial>
         </link>
         <joint name="${name}_wheel_joint" type="continuous">
-            <parent link="chassis"/>
+            <parent link="base_link"/>
             <child link="${name}_wheel"/>
-            <origin xyz="${xyz}" rpy="${rpy}"/>
-            <axis xyz="${axis}"/>
+            <origin xyz="0 ${y} 0" rpy="${-pi/2} 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="${motor_max_torque}" velocity="${motor_max_speed}"/>
+            <dynamics damping="0.0005" friction="0.0"/>
         </joint>
     </xacro:macro>
 
-    <xacro:macro name="caster_ball" params="name xyz rpy">
+    <!-- Esfera de apoio (ball transfer): corpo livre de atrito, rola em qualquer direcao -->
+    <xacro:macro name="caster_ball" params="name y">
         <link name="${name}">
             <visual>
-                <origin xyz="0 0 0" rpy="${rpy}"/>
                 <geometry><mesh filename="${meshes}/12mmball__revolve1.stl"/></geometry>
                 <material name="grey"/>
             </visual>
@@ -71,72 +110,95 @@
                 <geometry><sphere radius="${caster_ball_radius}"/></geometry>
             </collision>
             <inertial>
-                <mass value="0.005"/>
-                <inertia ixx="1e-7" ixy="0" ixz="0" iyy="1e-7" iyz="0" izz="1e-7"/>
+                <mass value="${caster_ball_mass}"/>
+                <inertia ixx="${0.4*caster_ball_mass*caster_ball_radius*caster_ball_radius}" ixy="0" ixz="0"
+                         iyy="${0.4*caster_ball_mass*caster_ball_radius*caster_ball_radius}" iyz="0"
+                         izz="${0.4*caster_ball_mass*caster_ball_radius*caster_ball_radius}"/>
             </inertial>
         </link>
         <joint name="${name}_joint" type="fixed">
             <parent link="chassis"/>
             <child link="${name}"/>
-            <origin xyz="${xyz}" rpy="0 0 0"/>
+            <origin xyz="0 ${y} ${caster_z}" rpy="0 0 0"/>
         </joint>
     </xacro:macro>
 
     <!-- ================= LINKS ================= -->
     <link name="base_link"/>
 
-    <!-- chassis: tudo o que e fixo no CAD (frame do Onshape) -->
+    <!-- chassis: tudo o que e rigido no CAD. Poses no plate frame (mm convertidos para m). -->
     <link name="chassis">
-        <xacro:chassis_visual mesh="base.stl" xyz="-0.00104301 -0.00775804 -0.00550781" rpy="0.000156777 0.0169755 0.042698"/>
-        <xacro:chassis_visual mesh="resto.stl" xyz="-0.000703692 -0.00774668 0.0144893" rpy="0.000156777 0.0169755 0.042698"/>
-        <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="0.0294437 -0.00645663 0.000975149" rpy="0.000156777 0.0169755 0.042698" material="grey"/>
-        <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="-0.0312922 -0.00905151 0.00200721" rpy="-0.000156777 -0.0169755 -3.09889" material="grey"/>
-        <xacro:chassis_visual mesh="eletroiman.stl" xyz="0.000994645 -0.0538637 -0.00151562" rpy="1.57095 0.0169755 0.042698" material="orange"/>
-        <xacro:chassis_visual mesh="rp_lidar.stl" xyz="0.123908 -0.080762 -0.657373" rpy="1.55382 0.000156754 -1.5281" material="grey"/>
-        <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="0.00028842 -0.0458832 -0.0230113" rpy="0.000156777 0.0169755 0.042698" material="white"/>
-        <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl" xyz="0.000469237 -0.0458607 -0.0123128" rpy="-0.0164377 -0.00424196 -1.78986" material="white"/>
-        <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="-0.00288046 0.0283327 -0.0228996" rpy="0.000156777 0.0169755 0.042698" material="white"/>
-        <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl" xyz="-0.00269965 0.0283552 -0.0122012" rpy="-0.0164377 -0.00424196 -1.78986" material="white"/>
+        <xacro:chassis_visual mesh="base.stl"  xyz="0 0 0" rpy="0 0 0"/>
+        <xacro:chassis_visual mesh="resto.stl" xyz="0 0 0.02" rpy="0 0 0"/>
+        <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="0.0304 0 0.007" rpy="0 0 0" material="grey"/>
+        <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="-0.0304 0 0.007" rpy="0 0 ${-pi}" material="grey"/>
+        <xacro:chassis_visual mesh="eletroiman.stl" xyz="0 -0.04615 0.004" rpy="${pi/2} 0 0" material="orange"/>
+        <!-- a mesh do LIDAR tem a origem longe do corpo; esta pose poe-no assente no topo do 'resto' -->
+        <xacro:chassis_visual mesh="rp_lidar.stl" xyz="0.13277 -0.07837 -0.64969" rpy="${pi/2} 0 ${-pi/2}" material="grey"/>
+        <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="0 ${caster_front_y} -0.0175" rpy="0 0 0" material="white"/>
+        <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl"  xyz="0 ${caster_front_y} -0.0068" rpy="0 0 -1.83259" material="white"/>
+        <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="0 ${caster_rear_y} -0.0174" rpy="0 0 0" material="white"/>
+        <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl"  xyz="0 ${caster_rear_y} -0.0067" rpy="0 0 -1.83259" material="white"/>
 
-        <!-- colisao simplificada: so a placa da base -->
-        <collision>
-            <origin xyz="-0.00104301 -0.00775804 -0.00550781" rpy="0.000156777 0.0169755 0.042698"/>
-            <geometry><mesh filename="${meshes}/base.stl"/></geometry>
+        <!-- COLISOES simplificadas (primitivas): placa + corpo + caixa do LIDAR + cabeca do LIDAR + iman.
+             Antes so existia a placa, por isso o robo atravessava paredes a altura do corpo/LIDAR. -->
+        <collision name="plate_col">
+            <origin xyz="0 0 0.0065" rpy="0 0 0"/>
+            <geometry><box size="0.080 0.0963 0.027"/></geometry>
+        </collision>
+        <collision name="body_col">
+            <origin xyz="0 0 0.045" rpy="0 0 0"/>
+            <geometry><box size="0.080 0.0963 0.050"/></geometry>
+        </collision>
+        <collision name="lidar_housing_col">
+            <origin xyz="-0.0001 -0.0025 0.08345" rpy="0 0 0"/>
+            <geometry><box size="0.0703 0.0961 0.0229"/></geometry>
+        </collision>
+        <collision name="lidar_head_col">
+            <origin xyz="0 0.0124 0.1092" rpy="0 0 0"/>
+            <geometry><cylinder radius="0.0347" length="0.0286"/></geometry>
+        </collision>
+        <collision name="magnet_col">
+            <origin xyz="0 -0.05365 0.004" rpy="${pi/2} 0 0"/>
+            <geometry><cylinder radius="0.01" length="0.015"/></geometry>
         </collision>
 
-        <!-- TODO: massa e inercia reais (atribuir materiais no Onshape ou medir) -->
+        <!-- massa/CM/inercia calculados a partir das meshes: ver tools/mass_budget.py -->
         <inertial>
-            <origin xyz="0 -0.01 0" rpy="0 0 0"/>
+            <origin xyz="${chassis_com}" rpy="0 0 0"/>
             <mass value="${chassis_mass}"/>
-            <inertia ixx="${chassis_mass/12*(0.1*0.1+0.03*0.03)}" ixy="0" ixz="0"
-                     iyy="${chassis_mass/12*(0.1*0.1+0.03*0.03)}" iyz="0"
-                     izz="${chassis_mass/12*(0.1*0.1+0.1*0.1)}"/>
+            <inertia ixx="${chassis_ixx}" ixy="${chassis_ixy}" ixz="${chassis_ixz}"
+                     iyy="${chassis_iyy}" iyz="${chassis_iyz}" izz="${chassis_izz}"/>
         </inertial>
     </link>
 
+    <!-- plate frame: 7 mm abaixo do eixo, rodado 90 graus (frente do CAD = -Y  ->  +X do ROS) -->
     <joint name="chassis_joint" type="fixed">
         <parent link="base_link"/>
         <child link="chassis"/>
-        <origin xyz="0 0 0" rpy="0 0 ${chassis_yaw}"/>
+        <origin xyz="0 0 ${-axle_height_in_plate}" rpy="0 0 ${pi/2}"/>
     </joint>
 
-    <!-- ================= RODAS (continuous) ================= -->
-    <!-- Esquerda = roda_2 do CAD (x>0), direita = roda do CAD (x<0).
-         Eixo da esquerda invertido para que velocidade positiva = andar para a frente. -->
-    <xacro:wheel name="left"  xyz="0.0404288 -0.00591039 0.000788417" rpy="0.0213475 -1.55382 0.0213475" axis="0 0 -1"/>
-    <xacro:wheel name="right" xyz="-0.0422773 -0.00959774 0.00219389" rpy="-3.12025 -1.55382 0.0213475" axis="0 0 1"/>
+    <!-- ================= RODAS (continuous) =================
+         Esquerda = +Y, direita = -Y. Os dois eixos apontam para +Y (Z do link),
+         logo velocidade positiva nas duas = frente.
+         vis_z/vis_roll: a mesh roda.stl vai de z=0 (face interior) a z=+8 mm (face exterior);
+         na direita o exterior e -Z do link, por isso a mesh e virada 180 graus. -->
+    <xacro:wheel name="left"  y="${wheel_y}"  vis_z="${-wheel_width/2}" vis_roll="0"/>
+    <xacro:wheel name="right" y="${-wheel_y}" vis_z="${wheel_width/2}"  vis_roll="${pi}"/>
 
     <!-- ================= ESFERAS (casters) ================= -->
-    <xacro:caster_ball name="caster_a" xyz="0.000330117 -0.0458654 -0.0205116" rpy="-0.00424253 0.0164375 -0.219138"/>
-    <xacro:caster_ball name="caster_b" xyz="-0.00283877 0.0283506 -0.0204" rpy="-0.00424253 0.0164375 -0.219138"/>
+    <xacro:caster_ball name="caster_front" y="${caster_front_y}"/>
+    <xacro:caster_ball name="caster_rear"  y="${caster_rear_y}"/>
 
     <!-- ================= LIDAR ================= -->
-    <!-- visual do LIDAR no chassis (pose do export; a mesh tem a origem longe do corpo) -->
+    <!-- laser_frame ligado ao base_link (NAO ao chassis): o eixo X do laser tem de apontar
+         para a frente do robo, senao o angulo 0 do scan fica virado 90 graus para o lado. -->
     <link name="laser_frame"/>
     <joint name="laser_joint" type="fixed">
-        <parent link="chassis"/>
+        <parent link="base_link"/>
         <child link="laser_frame"/>
-        <origin xyz="${lidar_xyz}" rpy="0 0 0"/>
+        <origin xyz="${lidar_x} ${lidar_y} ${lidar_z}" rpy="0 0 0"/>
     </joint>
 
 </robot>

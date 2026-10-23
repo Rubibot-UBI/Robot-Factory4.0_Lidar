@@ -30,7 +30,8 @@ def generate_launch_description():
     # Cria o robo a partir do topico robot_description
     spawn = Node(
         package='ros_gz_sim', executable='create',
-        arguments=['-topic', 'robot_description', '-name', 'my_bot', '-z', '0.05'],
+        # base_link esta a altura do eixo (raio da roda = 0.028 m); 0.03 m = pousa quase sem queda
+        arguments=['-topic', 'robot_description', '-name', 'my_bot', '-z', '0.03'],
         output='screen')
 
     # Ponte Gazebo <-> ROS 2
@@ -42,6 +43,7 @@ def generate_launch_description():
             '/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
             '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
             '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
+            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
         ],
         output='screen')
 
