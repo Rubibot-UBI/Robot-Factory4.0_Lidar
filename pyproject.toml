@@ -5,6 +5,7 @@ description = ""
 requires-python = ">=3.12"
 dependencies = [
     "onshape-to-robot>=1.8.3",
+    "trimesh>=5.1.1",
 ]
 
 [tool.uv]
