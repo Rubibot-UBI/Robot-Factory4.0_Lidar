@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<!--
+  RobotAtFactory 4.0 - mundo da competição.
+
+  Referencial do mundo = referencial das regras (tabelas 3.1 e 3.2): origem no centro da
+  zona dos ArUco do chão, x para a direita, y para cima (para o armazém de entrada), metros.
+  O chão (1700 x 1200 mm) tem o centro na origem.
+
+  Os .stl das meshes estão em milímetros -> scale 0.001.
+    ratf_warehouse.stl : x ±310, y -80..+10, z 0..130  (parede de trás em y≈0, abre para -y)
+    ratf_machine.stl   : x ±160, y ±80,      z 0..130  (eixo comprido em x)
+-->
+<sdf version="1.9">
+  <world name="factory_world">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <gravity>0 0 -9.81</gravity>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <!-- necessario para o sensor gpu_lidar (sem isto o /scan nunca e publicado) -->
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>
+          <surface>
+            <friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>
+          <material>
+            <ambient>0.35 0.35 0.35 1</ambient>
+            <diffuse>0.35 0.35 0.35 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Chão da competição: imagem da pista (tools/make_floor.py gera floor.png a partir do SVG).
+         Só visual, sem colisão (o ground_plane trata da física). 1 mm acima para não fazer z-fighting. -->
+    <model name="factory_floor">
+      <static>true</static>
+      <pose>0 0 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry><plane><normal>0 0 1</normal><size>1.7 1.2</size></plane></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>model://my_bot/worlds/textures/floor.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Warehouse de entrada (marcadores 50-53): parede de trás em y=+565 mm, abre para -y -->
+    <model name="warehouse_in">
+      <static>true</static>
+      <pose>-0.470 0.565 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_warehouse.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_warehouse.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.27 0.55 0.80 1</ambient>
+            <diffuse>0.27 0.55 0.80 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Warehouse de saída (marcadores 62-65): parede de trás em y=-565 mm, abre para +y (yaw 180) -->
+    <model name="warehouse_out">
+      <static>true</static>
+      <pose>0.470 -0.565 0 0 0 3.14159265</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_warehouse.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_warehouse.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.27 0.55 0.80 1</ambient>
+            <diffuse>0.27 0.55 0.80 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Máquina A (marcadores 56,57,60,61): parede central em x=-347.5 mm, linhas y=0 e y=-150 -> centro y=-75 -->
+    <model name="machine_a">
+      <static>true</static>
+      <pose>-0.3475 -0.075 0 0 0 1.57079633</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_machine.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_machine.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.27 0.55 0.80 1</ambient>
+            <diffuse>0.27 0.55 0.80 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Máquina B (marcadores 54,55,58,59): parede central em x=+347.5 mm, linhas y=0 e y=+150 -> centro y=+75 -->
+    <model name="machine_b">
+      <static>true</static>
+      <pose>0.3475 0.075 0 0 0 1.57079633</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_machine.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/ratf_machine.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.27 0.55 0.80 1</ambient>
+            <diffuse>0.27 0.55 0.80 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

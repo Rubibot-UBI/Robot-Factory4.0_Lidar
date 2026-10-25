@@ -25,7 +25,7 @@ def generate_launch_description():
     # Gazebo Harmonic com o mundo do pacote
     gz = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(ros_gz_sim, 'launch', 'gz_sim.launch.py')),
-        launch_arguments={'gz_args': '-r ' + os.path.join(pkg, 'worlds', 'empty.world')}.items())
+        launch_arguments={'gz_args': '-r ' + os.path.join(pkg, 'worlds', 'factory.world')}.items())
 
     # Cria o robo a partir do topico robot_description
     spawn = Node(

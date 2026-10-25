@@ -81,7 +81,10 @@ Verificar: `ros2 topic echo /odom` (o `x` cresce a andar em frente) e `ros2 topi
 | `src/description/meshes/` | `.stl` exportados do Onshape |
 | `src/launch/rsp.launch.py` | robot_state_publisher (RViz) |
 | `src/launch/sim.launch.py` | Gazebo + spawn + ponte ROS↔Gazebo |
+| `src/worlds/factory.world` | mundo da competição: chão com a imagem da pista, 2 warehouses e 2 máquinas (usado pelo `sim.launch.py`) |
 | `src/worlds/empty.world` | mundo vazio |
+| `src/worlds/textures/floor.png` | textura do chão (1700×1200 mm), gerada por `tools/make_floor.py` a partir de `mapa_raf4.svg` |
+| `tools/make_floor.py` | regenera o `floor.png` (`pip install cairosvg`; `--flip-y` se aparecer espelhado) |
 
 ## Física do robô (o que está modelado e porquê)
 
