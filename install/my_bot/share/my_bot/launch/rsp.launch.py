@@ -1,1 +1,0 @@
-/home/rafabacano/dev_ws/src/launch/rsp.launch.py
