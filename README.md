@@ -19,7 +19,7 @@ uv run onshape-to-robot . # gera robot.urdf e as meshes a partir do config.json
 
 Depois de exportar, copiar os `.stl` para `src/description/meshes/`.
 
-> O `robot.urdf` gerado **não é usado diretamente**. A fonte de verdade é o xacro em
+> O `robot.urdf` gerado (ignorado pelo git) **não é usado diretamente**. A fonte de verdade é o xacro em
 > `src/description/`. Se o CAD mudar (posições, peças novas), é preciso atualizar
 > o `robot_core.xacro` à mão com os valores novos do `robot.urdf`.
 
@@ -71,6 +71,16 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 Verificar: `ros2 topic echo /odom` (o `x` cresce a andar em frente) e `ros2 topic echo /scan --once`.
 
+## Receber o LIDAR em Python
+
+```bash
+# terminal 1: ros2 launch my_bot sim.launch.py   |   terminal 2: teleop   |   terminal 3:
+ros2 run my_bot lidar_listener.py
+```
+
+O AMCL começa em `process_scan()` dentro de `src/scripts/lidar_listener.py`. Ao acrescentar scripts novos,
+adicionar a linha correspondente `install(PROGRAMS ...)` no `src/CMakeLists.txt`.
+
 ## Estrutura
 
 | Pasta / ficheiro | Para quê |
@@ -81,10 +91,9 @@ Verificar: `ros2 topic echo /odom` (o `x` cresce a andar em frente) e `ros2 topi
 | `src/description/meshes/` | `.stl` exportados do Onshape |
 | `src/launch/rsp.launch.py` | robot_state_publisher (RViz) |
 | `src/launch/sim.launch.py` | Gazebo + spawn + ponte ROS↔Gazebo |
-| `src/worlds/factory.world` | mundo da competição: chão com a imagem da pista, 2 warehouses e 2 máquinas (usado pelo `sim.launch.py`) |
-| `src/worlds/empty.world` | mundo vazio |
-| `src/worlds/textures/floor.png` | textura do chão (1700×1200 mm), gerada por `tools/make_floor.py` a partir de `mapa_raf4.svg` |
-| `tools/make_floor.py` | regenera o `floor.png` (`pip install cairosvg`; `--flip-y` se aparecer espelhado) |
+| `src/worlds/factory.world` | mundo da competição: chão com a imagem da pista, 2 warehouses, 2 máquinas e 6 pilares (usado pelo `sim.launch.py`) |
+| `src/worlds/textures/floor.png` | textura do chão (1700×1200 mm) |
+| `src/scripts/lidar_listener.py` | nó Python que recebe `/scan` e `/odom`: ponto de partida para o AMCL |
 
 ## Física do robô (o que está modelado e porquê)
 
@@ -109,7 +118,7 @@ Depois de pesar, edita a tabela `PARTS` em `tools/mass_budget.py`, corre-o e cop
 LDROBOT LD14P (kit Waveshare D200): 0.1–8 m, 360°, 4000 amostras/s, 6 Hz por omissão (2–8 Hz), 667 pontos/volta a 6 Hz,
 precisão ±5 mm até 0.5 m e ±1 % de 1 a 6 m (alvo branco), 230400 baud UART, 5 V. Tópico `/scan`, frame `laser_frame`
 (eixo X do laser = frente do robô). Parâmetros no topo de `gazebo_control.xacro` (ruído do simulador = 0.01 m, valor médio).
-O mundo precisa do plugin `gz-sim-sensors-system` (já incluído em `empty.world` e `factory.world`).
+O mundo precisa do plugin `gz-sim-sensors-system` (já incluído em `factory.world`).
 No AMCL usar `laser_min_range` ≈ 0.12 (leituras junto ao mínimo são ruidosas). Abaixo de 0.1 m o sensor não mede nada:
 não contar com o LIDAR para travar nem para o encaixe final nas estações.
 A mesh `rp_lidar.stl` e as colisões do LIDAR no `robot_core.xacro` ainda são as do RPLidar A1 (por refazer: 96.3 × 59.8 × 38.8 mm, 101 g).
@@ -124,4 +133,4 @@ estão recuados em y para não colidirem com eles; o do canto inferior esquerdo 
 > se necessário, baixa o LIDAR ou ajusta `lidar_z`.
 
 ## Por fazer
-primeiro eu quero deixar tudo da parte "fisica" do robo bem, depois vou querer mudar o mapa porque eu vou fazer amcl, o mapa vai ser aquele que está nas regras da competição + uns pilares nos locais indicados, e so depois vou fazer eu o algoritmo em python para reagir aos valores dados do lidar, não esquecer de configurar este lidar de acordo com este link:
+primeiro eu quero deixar tudo da parte "fisica" do robo bem, depois vou querer mudar o mapa porque eu vou fazer amcl, o mapa vai ser aquele que está nas regras da competição + uns pilares nos locais indicados, e so depois vou fazer eu o algoritmo em python para reagir aos valores dados do lidar, não esquecer de configurar este lidar de acordo com este link: (link em falta)

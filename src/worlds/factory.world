@@ -54,7 +54,7 @@
       </link>
     </model>
 
-    <!-- Chão da competição: imagem da pista (tools/make_floor.py gera floor.png a partir do SVG).
+    <!-- Chão da competição: imagem da pista (src/worlds/textures/floor.png, 1700 x 1200 mm).
          Só visual, sem colisão (o ground_plane trata da física). 1 mm acima para não fazer z-fighting. -->
     <model name="factory_floor">
       <static>true</static>
