@@ -9,6 +9,7 @@
   Os .stl das meshes estão em milímetros -> scale 0.001.
     ratf_warehouse.stl : x ±310, y -80..+10, z 0..130  (parede de trás em y≈0, abre para -y)
     ratf_machine.stl   : x ±160, y ±80,      z 0..130  (eixo comprido em x)
+    pilar.stl         : cilindro Ø100 mm, z 0..210, origem no centro da base
 -->
 <sdf version="1.9">
   <world name="factory_world">
@@ -144,6 +145,133 @@
           <material>
             <ambient>0.27 0.55 0.80 1</ambient>
             <diffuse>0.27 0.55 0.80 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ================= PILARES (reguamento, seccao 7: 6 areas de 10x10 cm, h max 50 cm) =================
+         Marcadores proprios da equipa para o LIDAR/AMCL. Cilindro Ø100 mm x 210 mm (pilar.stl, mm).
+         POSICOES PROVISORIAS: o regulamento nao da coordenadas das 6 areas - confirmar com a organizacao
+         (repositorio oficial P33a/RobotAtFactory) e ajustar so o <pose> de cada pilar.
+         Para testar um conjunto assimetrico (quebra a simetria de 180 graus do mapa), apaga alguns. -->
+
+    <!-- canto sup. esquerdo (recuado em y: o warehouse_in ocupa x -0.78..-0.16, y 0.485..0.575) -->
+    <model name="pilar_tl">
+      <static>true</static>
+      <pose>-0.900 0.650 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 0.105 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.21</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/pilar.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>0.9 0.9 0.9 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- canto sup. direito -->
+    <model name="pilar_tr">
+      <static>true</static>
+      <pose>0.900 0.650 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 0.105 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.21</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/pilar.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>0.9 0.9 0.9 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- canto inf. esquerdo: a area de partida (verde, fig. 8.1 das regras) ocupa este canto (~0.35 x 0.22 m),
+         por isso o pilar fica logo acima dela, em y=-0.30 -->
+    <model name="pilar_bl">
+      <static>true</static>
+      <pose>-0.900 -0.650 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 0.105 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.21</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/pilar.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>0.9 0.9 0.9 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- canto inf. direito (recuado em y: o warehouse_out ocupa x 0.16..0.78, y -0.575..-0.485) -->
+    <model name="pilar_br">
+      <static>true</static>
+      <pose>0.900 -0.650 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 0.105 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.21</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/pilar.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>0.9 0.9 0.9 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ponto medio do lado de cima -->
+    <model name="pilar_mt">
+      <static>true</static>
+      <pose>0.000 0.650 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 0.105 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.21</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/pilar.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>0.9 0.9 0.9 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ponto medio do lado de baixo -->
+    <model name="pilar_mb">
+      <static>true</static>
+      <pose>0.000 -0.650 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 0.105 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.21</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><mesh><uri>model://my_bot/description/meshes/pilar.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>0.9 0.9 0.9 1</diffuse>
+            <specular>0 0 0 1</specular>
           </material>
         </visual>
       </link>

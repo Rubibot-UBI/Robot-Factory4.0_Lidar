@@ -3,15 +3,18 @@
 
     <!-- Gazebo Harmonic (gz sim), o par do ROS 2 Jazzy -->
 
-    <!-- ===== Parametros do sensor (RPLIDAR A1M8) =====
-         Datasheet: alcance 0.15 m a 12 m (versoes R5/R6; R4 e inferiores 6 m), >= 8000 amostras/s,
-         5.5 Hz tipico (2-10 Hz), resolucao angular <= 1 grau, erro < 1 % da distancia.
-         Valores abaixo = saida tipica do driver rplidar_ros em A1: 360 pontos a 10 Hz. -->
-    <xacro:property name="lidar_samples" value="360"/>
-    <xacro:property name="lidar_rate" value="10"/>
-    <xacro:property name="lidar_min_range" value="0.15"/>
-    <xacro:property name="lidar_max_range" value="12.0"/>
-    <xacro:property name="lidar_noise_std" value="0.005"/>
+    <!-- ===== Parametros do sensor (LDROBOT LD14P, kit Waveshare D200) =====
+         Datasheet (botnroll SEN03085): alcance 0.1 a 8 m, 360 graus, 4000 amostras/s,
+         scan 6 Hz por omissao (2-8 Hz via UART, 230400 baud), precisao alvo branco:
+         +-5 mm (0.1-0.5 m), +-10 mm (0.5 m), +-1 % (1-6 m), +-1.5 % (6-8 m).
+         Pontos por volta = 4000 / scan_hz  ->  6 Hz = 667 pontos (~0.54 graus); 8 Hz = 500 (~0.72 graus).
+         Ruido: o gpu_lidar so aceita desvio-padrao constante; 0.01 m ~ +-1 % a 1 m (a 2 m o real e ~0.02).
+         Nao ha 'altura do plano' no datasheet da loja: confirmar na wiki Waveshare e ajustar lidar_z (robot_core.xacro). -->
+    <xacro:property name="lidar_samples" value="667"/>
+    <xacro:property name="lidar_rate" value="6"/>
+    <xacro:property name="lidar_min_range" value="0.1"/>
+    <xacro:property name="lidar_max_range" value="8.0"/>
+    <xacro:property name="lidar_noise_std" value="0.01"/>
 
     <!-- ===== Atrito =====
          Os links filhos de juntas fixas seriam fundidos no pai pelo conversor URDF->SDF e o atrito

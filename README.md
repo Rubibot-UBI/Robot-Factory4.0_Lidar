@@ -106,9 +106,18 @@ massas (`chassis_mass` 0.485 kg, rodas 12 g, esferas 7 g), limites do motor (`mo
 Depois de pesar, edita a tabela `PARTS` em `tools/mass_budget.py`, corre-o e copia os valores impressos.
 
 ### LIDAR
-RPLIDAR A1M8: 0.15–12 m, 360 pontos, 10 Hz, ruído gaussiano σ = 5 mm, tópico `/scan`, frame `laser_frame`
-(eixo X do laser = frente do robô). Parâmetros no topo de `gazebo_control.xacro`.
-O mundo precisa do plugin `gz-sim-sensors-system` (já incluído em `empty.world`).
+LDROBOT LD14P (kit Waveshare D200): 0.1–8 m, 360°, 4000 amostras/s, 6 Hz por omissão (2–8 Hz), 667 pontos/volta a 6 Hz,
+precisão ±5 mm até 0.5 m e ±1 % de 1 a 6 m (alvo branco), 230400 baud UART, 5 V. Tópico `/scan`, frame `laser_frame`
+(eixo X do laser = frente do robô). Parâmetros no topo de `gazebo_control.xacro` (ruído do simulador = 0.01 m, valor médio).
+O mundo precisa do plugin `gz-sim-sensors-system` (já incluído em `empty.world` e `factory.world`).
+No AMCL usar `laser_min_range` ≈ 0.12 (leituras junto ao mínimo são ruidosas). Abaixo de 0.1 m o sensor não mede nada:
+não contar com o LIDAR para travar nem para o encaixe final nas estações.
+A mesh `rp_lidar.stl` e as colisões do LIDAR no `robot_core.xacro` ainda são as do RPLidar A1 (por refazer: 96.3 × 59.8 × 38.8 mm, 101 g).
+
+### Pilares
+`src/worlds/factory.world` tem 6 pilares (`pilar.stl`, Ø100 mm × 210 mm) nas 6 áreas de marcadores da secção 7 das regras.
+**As posições são provisórias**: as regras não dão coordenadas. Os dois cantos ocupados pelos warehouses (sup. esquerdo e inf. direito)
+estão recuados em y para não colidirem com eles; o do canto inferior esquerdo fica acima da área de partida (fig. 8.1). Ø100 mm toca nos 4 lados da área de 10 × 10 cm; ver se é aceite ou usar Ø80 mm.
 
 > **Atenção:** as paredes das máquinas e armazéns têm 130 mm de altura (figuras 4.2 e 4.3 das regras) e o plano do
 > LIDAR está a ~130 mm do chão, mesmo no topo delas. Confirma a altura real do plano no datasheet/robô e,
