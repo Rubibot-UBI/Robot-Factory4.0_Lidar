@@ -9,7 +9,6 @@ __pycache__/
 
 # Export bruto do Onshape (os .stl que usas ficam em src/description/meshes/)
 assets/
-robot.urdf
 
 # Build do ROS 2 / colcon
 build/
