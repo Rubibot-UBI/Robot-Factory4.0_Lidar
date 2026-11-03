@@ -106,7 +106,7 @@ Todas as poses das meshes são relativas à placa base. O export do Onshape vinh
 |---|---|
 | Rodas | Ø 56 mm × 8 mm, centros a y = ±45.4 mm → `wheel_separation` = 0.0908 m |
 | Esferas (casters) | Ø 12 mm, fundo à mesma cota que o fundo das rodas (3 apoios coplanares) |
-| Dimensão do robô | placa 80 × 96 mm; ~110 mm de comprimento com o íman; 144 mm de altura (cabe nos 30×30×30 cm) |
+| Dimensão do robô | placa 80 × 96 mm; ~110 mm de comprimento com o íman; ~147 mm de altura com o D200 (cabe nos 30×30×30 cm) |
 | Eixo do LIDAR | 12.4 mm **atrás** do centro do robô (`lidar_x` em robot_core.xacro) |
 
 Estimativas que **tens de confirmar com o robô real** (propriedades no topo de `robot_core.xacro`):
@@ -121,16 +121,19 @@ precisão ±5 mm até 0.5 m e ±1 % de 1 a 6 m (alvo branco), 230400 baud UART, 
 O mundo precisa do plugin `gz-sim-sensors-system` (já incluído em `factory.world`).
 No AMCL usar `laser_min_range` ≈ 0.12 (leituras junto ao mínimo são ruidosas). Abaixo de 0.1 m o sensor não mede nada:
 não contar com o LIDAR para travar nem para o encaixe final nas estações.
-A mesh `rp_lidar.stl` e as colisões do LIDAR no `robot_core.xacro` ainda são as do RPLidar A1 (por refazer: 96.3 × 59.8 × 38.8 mm, 101 g).
+Dimensões 96.3 × 59.8 × 38.8 mm, 101 g. As colisões (caixa única), a massa e a inércia no `robot_core.xacro` / `tools/mass_budget.py` já são as do D200.
+Só a mesh visual `rp_lidar.stl` ainda é a do RPLidar A1 (por trocar quando houver o CAD do D200; nessa altura volta a medir-se o eixo, `lidar_x`).
 
 ### Pilares
 `src/worlds/factory.world` tem 6 pilares (`pilar.stl`, Ø100 mm × 210 mm) nas 6 áreas de marcadores da secção 7 das regras.
 **As posições são provisórias**: as regras não dão coordenadas. Os dois cantos ocupados pelos warehouses (sup. esquerdo e inf. direito)
 estão recuados em y para não colidirem com eles; o do canto inferior esquerdo fica acima da área de partida (fig. 8.1). Ø100 mm toca nos 4 lados da área de 10 × 10 cm; ver se é aceite ou usar Ø80 mm.
 
-> **Atenção:** as paredes das máquinas e armazéns têm 130 mm de altura (figuras 4.2 e 4.3 das regras) e o plano do
-> LIDAR está a ~130 mm do chão, mesmo no topo delas. Confirma a altura real do plano no datasheet/robô e,
-> se necessário, baixa o LIDAR ou ajusta `lidar_z`.
+> **Altura do plano:** as paredes das máquinas e armazéns têm 130 mm (figuras 4.2 e 4.3 das regras) e os pilares 210 mm,
+> por isso o plano tem de ficar entre os dois. O `resto` foi esticado no CAD (agora 67 mm, topo a 87 mm na placa) e o D200
+> assenta em cima. `lidar_z` = `resto_top` + `lidar_plane_h` (0.027 m, **estimativa**: os datasheets não dão a altura do plano)
+> => plano a ~135 mm do chão, só ~5 mm acima das paredes. Mede no sensor real a distância da base ao meio da janela ótica
+> e atualiza `lidar_plane_h`; se ficar abaixo de ~140 mm do chão, sobe o LIDAR (espaçador ou `resto` mais alto).
 
 ## Por fazer
 primeiro eu quero deixar tudo da parte "fisica" do robo bem, depois vou querer mudar o mapa porque eu vou fazer amcl, o mapa vai ser aquele que está nas regras da competição + uns pilares nos locais indicados, e so depois vou fazer eu o algoritmo em python para reagir aos valores dados do lidar, não esquecer de configurar este lidar de acordo com este link: (link em falta)

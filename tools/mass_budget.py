@@ -32,7 +32,8 @@ PARTS = [
     ('motor_L',    'n20_mini_micro_metall_gear_motor.stl', T([0.0304, 0, 0.007], [0, 0, 0]),          0.011, True),   # N20 c/ caixa ~10-12 g
     ('motor_R',    'n20_mini_micro_metall_gear_motor.stl', T([-0.0304, 0, 0.007], [0, 0, -np.pi]),    0.011, True),
     ('magnet',     'eletroiman.stl', T([0, -0.04615, 0.004], [np.pi / 2, 0, 0]), 0.030, False),
-    ('lidar',      'rp_lidar.stl',   T([0.13277, -0.07837, -0.64969], [np.pi / 2, 0, -np.pi / 2]), 0.170, True),  # RPLIDAR A1: 170 g (datasheet)
+    # LD14P / D200: caixa 59.8 x 96.3 x 38.8 mm (X x Y x Z do plate frame) no topo do resto (87 mm), 101 g (datasheet)
+    ('lidar',      trimesh.creation.box(extents=[0.0598, 0.0963, 0.0388]), T([-0.0001, -0.0025, 0.087 + 0.0388 / 2], [0, 0, 0]), 0.101, False),
     ('caster_body_F', 'casterballwheelbody__cut_extrude6.stl', T([0, -0.03815, -0.0175], [0, 0, 0]),   0.0015, False),
     ('caster_body_B', 'casterballwheelbody__cut_extrude6.stl', T([0, 0.03613, -0.0174], [0, 0, 0]),    0.0015, False),
 ]
@@ -41,7 +42,7 @@ tot = 0.0
 com = np.zeros(3)
 items = []
 for name, mesh, M, mass, hull in PARTS:
-    m = trimesh.load(os.path.join(MESHES, mesh))
+    m = trimesh.load(os.path.join(MESHES, mesh)) if isinstance(mesh, str) else mesh
     if hull:
         m = m.convex_hull
     m = m.copy()

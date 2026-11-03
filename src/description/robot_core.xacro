@@ -41,25 +41,41 @@
     <xacro:property name="wheel_mass" value="0.012"/>              <!-- roda impressa 7.6 g (PLA macico) + pneu -->
     <xacro:property name="caster_ball_mass" value="0.0071"/>       <!-- esfera de aco 12 mm: 0.902 cm3 x 7.85 g/cm3 -->
 
-    <xacro:property name="chassis_mass" value="0.485"/>            <!-- placa 60 g + corpo/bateria/PCBs 200 g + 2 motores + iman + LIDAR 170 g + 2 corpos de caster -->
-    <xacro:property name="chassis_com" value="-0.00006 -0.00094 0.05392"/>
-    <xacro:property name="chassis_ixx" value="1.0369e-03"/>
-    <xacro:property name="chassis_ixy" value="1.6735e-07"/>
-    <xacro:property name="chassis_ixz" value="1.1116e-06"/>
-    <xacro:property name="chassis_iyy" value="8.5370e-04"/>
-    <xacro:property name="chassis_iyz" value="-1.1292e-04"/>
-    <xacro:property name="chassis_izz" value="6.0338e-04"/>
+    <xacro:property name="chassis_mass" value="0.416"/>            <!-- placa 60 g + corpo/bateria/PCBs 200 g + 2 motores + iman + LIDAR D200 101 g + 2 corpos de caster -->
+    <xacro:property name="chassis_com" value="-0.00002 -0.00391 0.05367"/>
+    <xacro:property name="chassis_ixx" value="9.8430e-04"/>
+    <xacro:property name="chassis_ixy" value="1.0576e-08"/>
+    <xacro:property name="chassis_ixz" value="5.3180e-07"/>
+    <xacro:property name="chassis_iyy" value="8.0404e-04"/>
+    <xacro:property name="chassis_iyz" value="-5.5844e-05"/>
+    <xacro:property name="chassis_izz" value="5.5358e-04"/>
 
     <!-- limites do motor (N20 com redutora - ajustar ao motor real) -->
     <xacro:property name="motor_max_torque" value="0.1"/>          <!-- N.m por roda -->
     <xacro:property name="motor_max_speed" value="20.0"/>          <!-- rad/s por roda (~190 rpm => 0.56 m/s) -->
 
-    <!-- ================= LIDAR (RPLIDAR A1) ================= -->
-    <!-- Eixo de rotacao da cabeca medido na mesh: (0, +12.4 mm) no plate frame, i.e. 12.4 mm ATRAS do centro do robo.
-         Plano de varrimento: a meio da cabeca (z = 109 mm na placa). Ajustar se o datasheet indicar outra altura. -->
-    <xacro:property name="lidar_x" value="-0.0124"/>               <!-- em base_link -->
+    <!-- ================= RESTO (corpo) =================
+         resto.stl: 67 mm de altura, origem na base, assente a 20 mm na placa => topo a 87 mm no plate frame.
+         (O resto foi esticado no Onshape para o LIDAR ficar acima das paredes de 130 mm; altura lida do export.) -->
+    <xacro:property name="resto_z" value="0.02"/>
+    <xacro:property name="resto_height" value="0.067"/>
+    <xacro:property name="resto_top" value="${resto_z + resto_height}"/>   <!-- 0.087 m no plate frame -->
+
+    <!-- ================= LIDAR (LDROBOT LD14P, kit Waveshare D200) =================
+         Dimensoes do datasheet: 96.3 x 59.8 x 38.8 mm, 101 g. Assenta no topo do resto.
+         Os datasheets NAO dizem a que altura esta o plano de varrimento: lidar_plane_h e uma ESTIMATIVA
+         (~70 % da altura, na janela optica da cabeca rotativa). MEDE no sensor real (da base ate ao meio da janela)
+         e atualiza. Condicao do mapa: plano entre 130 mm (topo das paredes) e 210 mm (topo dos pilares) acima do chao.
+         A mesh rp_lidar.stl e as colisoes do chassis ainda sao as do RPLidar A1 so no VISUAL; colisoes/massa ja sao do D200.
+         Eixo de rotacao: 12.4 mm ATRAS do centro do robo (medido na mesh A1; re-medir quando houver CAD do D200). -->
+    <xacro:property name="lidar_len" value="0.0963"/>               <!-- eixo Y do plate frame (frente-tras do robo) -->
+    <xacro:property name="lidar_wid" value="0.0598"/>               <!-- eixo X do plate frame (largura) -->
+    <xacro:property name="lidar_h" value="0.0388"/>
+    <xacro:property name="lidar_plane_h" value="0.027"/>            <!-- plano de varrimento acima da base do sensor (ESTIMATIVA) -->
+    <xacro:property name="lidar_x" value="-0.0124"/>                <!-- em base_link -->
     <xacro:property name="lidar_y" value="0.0"/>
-    <xacro:property name="lidar_z" value="${0.109 - axle_height_in_plate}"/>
+    <xacro:property name="lidar_z" value="${resto_top + lidar_plane_h - axle_height_in_plate}"/>   <!-- em base_link: 0.107 m -->
+    <!-- altura do plano acima do chao = lidar_z + wheel_radius = 0.135 m (paredes 0.130, pilares 0.210) -->
 
     <!-- ================= MACROS ================= -->
     <xacro:macro name="chassis_visual" params="mesh xyz rpy material:=light_blue">
@@ -133,30 +149,28 @@
         <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="0.0304 0 0.007" rpy="0 0 0" material="grey"/>
         <xacro:chassis_visual mesh="n20_mini_micro_metall_gear_motor.stl" xyz="-0.0304 0 0.007" rpy="0 0 ${-pi}" material="grey"/>
         <xacro:chassis_visual mesh="eletroiman.stl" xyz="0 -0.04615 0.004" rpy="${pi/2} 0 0" material="orange"/>
-        <!-- a mesh do LIDAR tem a origem longe do corpo; esta pose poe-no assente no topo do 'resto' -->
-        <xacro:chassis_visual mesh="rp_lidar.stl" xyz="0.13277 -0.07837 -0.64969" rpy="${pi/2} 0 ${-pi/2}" material="grey"/>
+        <!-- a mesh do LIDAR (ainda a do RPLidar A1) tem a origem longe do corpo; esta pose (do novo export do Onshape,
+             z = -0.632692 + resto 17 mm mais alto) poe-na assente no topo do 'resto' (87 mm) -->
+        <xacro:chassis_visual mesh="rp_lidar.stl" xyz="0.13277 -0.07837 -0.632692" rpy="${pi/2} 0 ${-pi/2}" material="grey"/>
         <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="0 ${caster_front_y} -0.0175" rpy="0 0 0" material="white"/>
         <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl"  xyz="0 ${caster_front_y} -0.0068" rpy="0 0 -1.83259" material="white"/>
         <xacro:chassis_visual mesh="casterballwheelbody__cut_extrude6.stl" xyz="0 ${caster_rear_y} -0.0174" rpy="0 0 0" material="white"/>
         <xacro:chassis_visual mesh="casterballwheellid__cut_extrude2.stl"  xyz="0 ${caster_rear_y} -0.0067" rpy="0 0 -1.83259" material="white"/>
 
-        <!-- COLISOES simplificadas (primitivas): placa + corpo + caixa do LIDAR + cabeca do LIDAR + iman.
+        <!-- COLISOES simplificadas (primitivas): placa + corpo + caixa do LIDAR D200 + iman.
              Antes so existia a placa, por isso o robo atravessava paredes a altura do corpo/LIDAR. -->
         <collision name="plate_col">
             <origin xyz="0 0 0.0065" rpy="0 0 0"/>
             <geometry><box size="0.080 0.0963 0.027"/></geometry>
         </collision>
         <collision name="body_col">
-            <origin xyz="0 0 0.045" rpy="0 0 0"/>
-            <geometry><box size="0.080 0.0963 0.050"/></geometry>
+            <origin xyz="0 0 ${(0.02 + resto_top)/2}" rpy="0 0 0"/>
+            <geometry><box size="0.080 0.0963 ${resto_top - 0.02}"/></geometry>
         </collision>
-        <collision name="lidar_housing_col">
-            <origin xyz="-0.0001 -0.0025 0.08345" rpy="0 0 0"/>
-            <geometry><box size="0.0703 0.0961 0.0229"/></geometry>
-        </collision>
-        <collision name="lidar_head_col">
-            <origin xyz="0 0.0124 0.1092" rpy="0 0 0"/>
-            <geometry><cylinder radius="0.0347" length="0.0286"/></geometry>
+        <!-- LD14P/D200 como caixa unica 59.8 x 96.3 x 38.8 mm, assente no topo do resto -->
+        <collision name="lidar_col">
+            <origin xyz="-0.0001 -0.0025 ${resto_top + lidar_h/2}" rpy="0 0 0"/>
+            <geometry><box size="${lidar_wid} ${lidar_len} ${lidar_h}"/></geometry>
         </collision>
         <collision name="magnet_col">
             <origin xyz="0 -0.05365 0.004" rpy="${pi/2} 0 0"/>
