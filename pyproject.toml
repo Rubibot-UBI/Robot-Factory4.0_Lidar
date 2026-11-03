@@ -4,8 +4,10 @@ version = "0.0.0"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
+    "matplotlib>=3.11.2",
     "onshape-to-robot>=1.8.3",
     "scipy>=1.11",
+    "tk>=0.1.0",
     "trimesh>=5.1.1",
 ]
 
