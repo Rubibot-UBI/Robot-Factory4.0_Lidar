@@ -83,6 +83,32 @@
         </sensor>
     </gazebo>
 
+    <!-- ===== IMU BMI160 (6 eixos, sem magnetometro: o yaw deriva) =====
+         Datasheet: ruido giroscopio 0.007 deg/s/sqrt(Hz), acelerometro 180 ug/sqrt(Hz).
+         Com ~50 Hz de largura de banda (saida 100 Hz): gyro = 0.007*sqrt(50) = 0.05 deg/s = 8.6e-4 rad/s;
+         accel = 180e-6*9.81*sqrt(50) = 0.0125 m/s2. -->
+    <gazebo reference="imu_link">
+        <sensor name="bmi160" type="imu">
+            <topic>imu</topic>
+            <gz_frame_id>imu_link</gz_frame_id>
+            <update_rate>100</update_rate>
+            <always_on>true</always_on>
+            <visualize>false</visualize>
+            <imu>
+                <angular_velocity>
+                    <x><noise type="gaussian"><mean>0</mean><stddev>8.6e-4</stddev></noise></x>
+                    <y><noise type="gaussian"><mean>0</mean><stddev>8.6e-4</stddev></noise></y>
+                    <z><noise type="gaussian"><mean>0</mean><stddev>8.6e-4</stddev></noise></z>
+                </angular_velocity>
+                <linear_acceleration>
+                    <x><noise type="gaussian"><mean>0</mean><stddev>0.0125</stddev></noise></x>
+                    <y><noise type="gaussian"><mean>0</mean><stddev>0.0125</stddev></noise></y>
+                    <z><noise type="gaussian"><mean>0</mean><stddev>0.0125</stddev></noise></z>
+                </linear_acceleration>
+            </imu>
+        </sensor>
+    </gazebo>
+
     <!-- ===== Controlo diferencial + estado das juntas ===== -->
     <gazebo>
         <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">

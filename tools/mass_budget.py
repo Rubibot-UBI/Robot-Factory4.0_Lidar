@@ -29,8 +29,8 @@ def T(xyz, rpy):
 PARTS = [
     ('base_plate', 'base.stl',   T([0, 0, 0], [0, 0, 0]),                     0.060, False),  # PLA ~35% enchimento (estimativa)
     ('body',       'resto.stl',  T([0, 0, 0.02], [0, 0, 0]),                  0.200, False),  # bloco = bateria + PCBs + caixa (PLACEHOLDER)
-    ('motor_L',    'n20_mini_micro_metall_gear_motor.stl', T([0.0304, 0, 0.007], [0, 0, 0]),          0.011, True),   # N20 c/ caixa ~10-12 g
-    ('motor_R',    'n20_mini_micro_metall_gear_motor.stl', T([-0.0304, 0, 0.007], [0, 0, -np.pi]),    0.011, True),
+    ('motor_L',    'n20_mini_micro_metall_gear_motor.stl', T([0.0304, 0, 0.007], [0, 0, 0]),          0.018, True),   # MOT02049 50:1 c/ encoder, 18 g (datasheet)
+    ('motor_R',    'n20_mini_micro_metall_gear_motor.stl', T([-0.0304, 0, 0.007], [0, 0, -np.pi]),    0.018, True),
     ('magnet',     'eletroiman.stl', T([0, -0.04615, 0.004], [np.pi / 2, 0, 0]), 0.030, False),
     # LD14P / D200: caixa 59.8 x 96.3 x 38.8 mm (X x Y x Z do plate frame) no topo do resto (87 mm), 101 g (datasheet)
     ('lidar',      trimesh.creation.box(extents=[0.0598, 0.0963, 0.0388]), T([-0.0001, -0.0025, 0.087 + 0.0388 / 2], [0, 0, 0]), 0.101, False),

@@ -41,18 +41,21 @@
     <xacro:property name="wheel_mass" value="0.012"/>              <!-- roda impressa 7.6 g (PLA macico) + pneu -->
     <xacro:property name="caster_ball_mass" value="0.0071"/>       <!-- esfera de aco 12 mm: 0.902 cm3 x 7.85 g/cm3 -->
 
-    <xacro:property name="chassis_mass" value="0.416"/>            <!-- placa 60 g + corpo/bateria/PCBs 200 g + 2 motores + iman + LIDAR D200 101 g + 2 corpos de caster -->
-    <xacro:property name="chassis_com" value="-0.00002 -0.00391 0.05367"/>
-    <xacro:property name="chassis_ixx" value="9.8430e-04"/>
-    <xacro:property name="chassis_ixy" value="1.0576e-08"/>
-    <xacro:property name="chassis_ixz" value="5.3180e-07"/>
-    <xacro:property name="chassis_iyy" value="8.0404e-04"/>
-    <xacro:property name="chassis_iyz" value="-5.5844e-05"/>
-    <xacro:property name="chassis_izz" value="5.5358e-04"/>
+    <xacro:property name="chassis_mass" value="0.430"/>            <!-- placa 60 g + corpo/bateria/PCBs 200 g + 2 motores + iman + LIDAR D200 101 g + 2 corpos de caster -->
+    <xacro:property name="chassis_com" value="-0.00002 -0.00379 0.05223"/>
+    <xacro:property name="chassis_ixx" value="1.0112e-03"/>
+    <xacro:property name="chassis_ixy" value="6.9060e-09"/>
+    <xacro:property name="chassis_ixz" value="5.4628e-07"/>
+    <xacro:property name="chassis_iyy" value="8.4072e-04"/>
+    <xacro:property name="chassis_iyz" value="-5.3512e-05"/>
+    <xacro:property name="chassis_izz" value="5.6412e-04"/>
 
-    <!-- limites do motor (N20 com redutora - ajustar ao motor real) -->
-    <xacro:property name="motor_max_torque" value="0.1"/>          <!-- N.m por roda -->
-    <xacro:property name="motor_max_speed" value="20.0"/>          <!-- rad/s por roda (~190 rpm => 0.56 m/s) -->
+    <!-- Motor: Micro Metal c/ encoder 50:1, 6 V (Botnroll MOT02049 / DFRobot), 18 g
+         vazio 310 rpm (32.5 rad/s, 0.91 m/s) | nominal 180 rpm (18.85 rad/s, 0.53 m/s) @ 6 V
+         binario nominal 0.35 kg.cm = 0.034 N.m | instantaneo 0.8 kg.cm = 0.078 N.m
+         Usa-se a velocidade NOMINAL como maximo (em vazio o robo nao aguenta carga). -->
+    <xacro:property name="motor_max_torque" value="0.078"/>        <!-- N.m por roda (pico) -->
+    <xacro:property name="motor_max_speed" value="18.85"/>         <!-- rad/s por roda (180 rpm) -->
 
     <!-- ================= RESTO (corpo) =================
          resto.stl: 67 mm de altura, origem na base, assente a 20 mm na placa => topo a 87 mm no plate frame.
@@ -204,6 +207,16 @@
     <!-- ================= ESFERAS (casters) ================= -->
     <xacro:caster_ball name="caster_front" y="${caster_front_y}"/>
     <xacro:caster_ball name="caster_rear"  y="${caster_rear_y}"/>
+
+    <!-- ================= IMU (BMI160) =================
+         POSICAO PROVISORIA: ajustar ao sitio real da PCB. Eixos alinhados com base_link (x frente, y esquerda, z cima);
+         se a placa estiver rodada, mudar o rpy. -->
+    <link name="imu_link"/>
+    <joint name="imu_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+    </joint>
 
     <!-- ================= LIDAR ================= -->
     <!-- laser_frame ligado ao base_link (NAO ao chassis): o eixo X do laser tem de apontar

@@ -27,6 +27,9 @@
       <render_engine>ogre2</render_engine>
     </plugin>
 
+    <!-- necessario para o sensor IMU (/imu) -->
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 10 0 0 0</pose>

@@ -4,6 +4,6 @@ project(my_bot)
 find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY description launch worlds DESTINATION share/${PROJECT_NAME})
-   install(PROGRAMS scripts/lidar_listener.py scripts/lidar_viewer.py DESTINATION lib/${PROJECT_NAME})
+   install(PROGRAMS scripts/lidar_listener.py scripts/lidar_viewer.py scripts/sensors_viewer.py DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
