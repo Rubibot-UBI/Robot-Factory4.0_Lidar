@@ -1,3 +1,4 @@
+import math
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -28,10 +29,19 @@ def generate_launch_description():
         launch_arguments={'gz_args': '-r ' + os.path.join(pkg, 'worlds', 'factory.world')}.items())
 
     # Cria o robo a partir do topico robot_description
+    # Spawn: canto inferior esquerdo da arena (chao 1.7 x 1.2 m, origem no centro, y = norte),
+    # a apontar para norte (+Y). A frente do robo e +X em base_link, logo yaw = +90 graus = norte.
+    # Acrescentamos um pequeno erro de rotacao (+0.12 rad ~ 7 graus, desviado para o lado esquerdo/oeste).
+    spawn_x = -0.70
+    spawn_y = -0.45
+    spawn_yaw = math.pi / 2 + 0.12
+
     spawn = Node(
         package='ros_gz_sim', executable='create',
         # base_link esta a altura do eixo (raio da roda = 0.028 m); 0.03 m = pousa quase sem queda
-        arguments=['-topic', 'robot_description', '-name', 'my_bot', '-z', '0.03'],
+        arguments=['-topic', 'robot_description', '-name', 'my_bot',
+                   '-x', str(spawn_x), '-y', str(spawn_y), '-z', '0.03',
+                   '-Y', str(spawn_yaw)],
         output='screen')
 
     # Ponte Gazebo <-> ROS 2
