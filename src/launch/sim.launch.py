@@ -1,5 +1,6 @@
 import math
 import os
+import random
 import sys
 
 from ament_index_python.packages import get_package_share_directory
@@ -47,6 +48,38 @@ def _start_gazebo(context, *args, **kwargs):
         launch_arguments={'gz_args': '-r ' + world}.items())
     return msgs + [gz]
 
+# Area de partida (verde, fig. 8.1 das regras): quadrado de 0.35 x 0.35 m no canto inferior esquerdo da arena
+# (chao 1.7 x 1.2 m, origem no centro, y = norte). O canto superior direito da area coincide com o canto
+# inferior esquerdo da maquina A -> x in [-0.85, -0.50], y in [-0.60, -0.25].
+START_CX, START_CY = -0.675, -0.425  # centro da area de partida
+START_JITTER_X = 0.07                # +- m (meia largura da area = 0.175; o robo tem meia diagonal ~0.06)
+START_JITTER_Y = 0.07                # +- m (idem em y)
+START_JITTER_YAW = 0.17              # +- rad (~10 graus) em torno de norte
+
+
+def _spawn_robot(context, *args, **kwargs):
+    """Spawn aleatorio perto do centro da area de partida, a apontar para norte (+Y) com pequeno desvio.
+
+    Com seed:=N a pose e reproduzivel (usa N+1, para nao ficar ligada a seed dos objetos).
+    A frente do robo e +X em base_link, logo yaw = +pi/2 = norte.
+    """
+    seed = LaunchConfiguration('seed').perform(context)
+    rng = random.Random(int(seed) + 1) if seed.strip() else random.Random()
+    x = START_CX + rng.uniform(-START_JITTER_X, START_JITTER_X)
+    y = START_CY + rng.uniform(-START_JITTER_Y, START_JITTER_Y)
+    yaw = math.pi / 2 + rng.uniform(-START_JITTER_YAW, START_JITTER_YAW)
+
+    spawn = Node(
+        package='ros_gz_sim', executable='create',
+        # base_link esta a altura do eixo (raio da roda = 0.028 m); 0.03 m = pousa quase sem queda
+        arguments=['-topic', 'robot_description', '-name', 'my_bot',
+                   '-x', f'{x:.4f}', '-y', f'{y:.4f}', '-z', '0.03',
+                   '-Y', f'{yaw:.4f}'],
+        output='screen')
+    info = LogInfo(msg='[spawn] x=%.3f y=%.3f yaw=%.1f graus (verdade-terreno da pose inicial)'
+                       % (x, y, math.degrees(yaw)))
+    return [info, spawn]
+
 
 def generate_launch_description():
     pkg = get_package_share_directory('my_bot')
@@ -74,21 +107,8 @@ def generate_launch_description():
     ]
     gz = OpaqueFunction(function=_start_gazebo)
 
-    # Cria o robo a partir do topico robot_description
-    # Spawn: canto inferior esquerdo da arena (chao 1.7 x 1.2 m, origem no centro, y = norte),
-    # a apontar para norte (+Y). A frente do robo e +X em base_link, logo yaw = +90 graus = norte.
-    # Acrescentamos um pequeno erro de rotacao (+0.12 rad ~ 7 graus, desviado para o lado esquerdo/oeste).
-    spawn_x = -0.70
-    spawn_y = -0.45
-    spawn_yaw = math.pi / 2 + 0.12
-
-    spawn = Node(
-        package='ros_gz_sim', executable='create',
-        # base_link esta a altura do eixo (raio da roda = 0.028 m); 0.03 m = pousa quase sem queda
-        arguments=['-topic', 'robot_description', '-name', 'my_bot',
-                   '-x', str(spawn_x), '-y', str(spawn_y), '-z', '0.03',
-                   '-Y', str(spawn_yaw)],
-        output='screen')
+    # Cria o robo a partir do topico robot_description (pose aleatoria na area de partida, ver _spawn_robot)
+    spawn = OpaqueFunction(function=_spawn_robot)
 
     # Ponte Gazebo <-> ROS 2
     bridge = Node(

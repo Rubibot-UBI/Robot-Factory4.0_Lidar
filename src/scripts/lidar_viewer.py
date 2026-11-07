@@ -12,13 +12,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import rclpy
 from matplotlib.animation import FuncAnimation
-from matplotlib.patches import Circle, Rectangle
+from matplotlib.patches import Rectangle
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan
 
 VIEW = 2.0         # metade do lado da vista (m); a vista fica sempre centrada no laser (0, 0)
-RING_STEP = 0.5    # espaçamento dos círculos de distância (m)
 ACCUMULATE = 1     # nº de voltas sobrepostas (aumenta para ver a dispersão do ruído)
 MIN_RANGE = 0.12   # ignora leituras junto ao mínimo do sensor
 
@@ -52,11 +51,6 @@ def main():
     ax.set_xlabel('y (m)  ← esquerda')
     ax.set_ylabel('x (m)  ↑ frente')
     ax.grid(alpha=0.3)
-
-    # Círculos de distância (a cada RING_STEP)
-    for radius in np.arange(RING_STEP, VIEW * 1.45, RING_STEP):
-        ax.add_patch(Circle((0, 0), radius, fill=False, ls='--', lw=0.6, color='gray'))
-        ax.text(0, radius, f'{radius:g} m', color='gray', fontsize=8, ha='center', va='bottom')
 
     # Robô (retângulo) e posição do laser
     ax.add_patch(Rectangle((ROBOT_WID / 2, LASER_BEHIND_CENTER - ROBOT_LEN / 2), -ROBOT_WID, ROBOT_LEN,
